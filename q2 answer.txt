@@ -1,0 +1,69 @@
+def add_book(catalog, book_id, title, author, year):
+    if book_id in catalog:
+        print(f"Book ID {book_id} already exists")
+    else:
+        catalog[book_id] = (title, author, year)
+        print(f"Added: {title} by {author}")
+
+def borrow_book(catalog, borrowed_books, book_id):
+    if book_id not in catalog:
+        print(f"Book ID {book_id} not found")
+    elif book_id in borrowed_books:
+        print(f"Book ID {book_id} already borrowed")
+    else:
+        borrowed_books.append(book_id)
+        title = catalog[book_id][0]
+        print(f"Borrowed: {title}")
+
+def return_book(borrowed_books, book_id):
+    if book_id in borrowed_books:
+        borrowed_books.remove(book_id)
+        print(f"Returned: Book ID {book_id}")
+    else:
+        print(f"Book ID {book_id} was not borrowed")
+
+def register_member(members, member_id):
+    members.add(member_id)
+    print(f"Registered member: {member_id}")
+
+def show_available(catalog, borrowed_books):
+    print("\n--- Available Books ---")
+    available_found = False
+    for book_id, (title, author, year) in catalog.items():
+        if book_id not in borrowed_books:
+            print(f"ID: {book_id}, Title: {title}, Author: {author}, Year: {year}")
+            available_found = True
+    if not available_found:
+        print("No books available")
+
+def main():
+    catalog = {}
+    borrowed_books = []
+    members = set()
+    
+    # 1. Add 4 books
+    add_book(catalog, 101, "Python Crash Course", "Eric Matthes", 2019)
+    add_book(catalog, 102, "Clean Code", "Robert Martin", 2008)
+    add_book(catalog, 103, "Atomic Habits", "James Clear", 2018)
+    add_book(catalog, 104, "Deep Learning", "Ian Goodfellow", 2016)
+    
+    # 2. Register 3 members, test duplicate
+    register_member(members, "M001")
+    register_member(members, "M002")
+    register_member(members, "M003")
+    register_member(members, "M002") # duplicate ignored
+    
+    print(f"\nTotal unique members: {len(members)}")
+    
+    # 3. Borrow 2 books
+    borrow_book(catalog, borrowed_books, 102)
+    borrow_book(catalog, borrowed_books, 104)
+    
+    # 4. Return 1 book
+    return_book(borrowed_books, 102)
+    
+    # 5. Display available books
+    show_available(catalog, borrowed_books)
+
+if __name__ == "__main__":
+    main()
